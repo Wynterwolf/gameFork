@@ -28,7 +28,8 @@ class CmdFinger(BaseCommand):
         output = []
         output.append("")  # Add an empty line before the content
 
-        for attr_name, attr_value in finger_data.items():
+        for attr in finger_data:
+            attr_name, attr_value = attr.key, attr.value
             if attr_name.startswith("finger_"):
                 field_name = attr_name[7:].replace("_", " ").capitalize()  # Strip 'finger_' and format
                 output.append(f"|w{field_name}|n: |w{attr_value}|n")
