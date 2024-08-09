@@ -1,3 +1,7 @@
+# commands/default_cmdsets.py
+from evennia import default_cmds
+from commands.CmdWhere import CmdWhere
+
 """
 Command sets
 
@@ -32,6 +36,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         Populates the cmdset
         """
         super().at_cmdset_creation()
+        self.add(CmdWhere())
         #
         # any commands you add below will overload the default ones.
         #
