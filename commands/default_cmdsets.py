@@ -2,6 +2,8 @@
 from evennia import default_cmds
 from commands.CmdWhere import CmdWhere
 from commands.CmdWeather import CmdWeather
+from commands.CmdFinger import CmdFinger
+from commands.CmdSetFingerField import CmdSetFingerField
 
 """
 Command sets
@@ -39,6 +41,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         super().at_cmdset_creation()
         self.add(CmdWhere())
         self.add(CmdWeather())
+        self.add(CmdFinger())
         #
         # any commands you add below will overload the default ones.
         #
