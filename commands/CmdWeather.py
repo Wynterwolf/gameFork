@@ -34,9 +34,11 @@ class CmdWeather(Command):
 
             # Add ANSI colors using escape sequences
             message = (
+                f"\n"
                 f"\033[36mCurrent Temperature:\033[0m \033[33m{temperature_f:.2f} F\033[0m\n"
                 f"\033[36mSunrise:\033[0m \033[32m{sunrise}\033[0m\n"
                 f"\033[36mSunset:\033[0m \033[31m{sunset}\033[0m"
+                f"\n"
             )
             self.caller.msg(message)
         else:
