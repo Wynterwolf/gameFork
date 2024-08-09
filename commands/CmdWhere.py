@@ -1,40 +1,42 @@
-# commands/CmdWhere.py
-
-from evennia import Command, utils
+from evennia import Command
 from evennia.server.sessionhandler import SESSIONS
-from evennia.utils import time_format
+from evennia.utils import ansi
 
 class CmdWhere(Command):
     """
-    Display the locations of all connected players.
+    +where
 
+    Displays the current locations of all online players.
     Usage:
       +where
-
-    This command shows the location, name, and idle time of all connected players.
     """
     key = "+where"
     aliases = ["where"]
     locks = "cmd:all()"
-    help_category = "General"
 
     def func(self):
-        """
-        Get the location, name, and idle time of all connected players.
-        """
-        players = SESSIONS.get_sessions()
-        output = []
+        """Implement the +where command"""
 
-        for session in players:
-            player = session.get_puppet()
-            if player:
-                location = player.location
-                location_name = location.key if location else "Unknown"
-                idle_time = time_format(session.cmd_last_visible - session.conn_time, 2)
-                output.append(f"{player.name:20} {location_name:30} {idle_time}")
+        # Get a list of all connected sessions
+        sessions = SESSIONS.get_sessions()
+        if not sessions:
+            self.caller.msg("No players found.")
+            return
 
-        if output:
-            header = f"{'Player':20} {'Location':30} {'Idle'}"
-            self.caller.msg(f"{header}\n" + "\n".join(output))
-        else:
-            self.caller.msg("No players are currently connected.")
+        # Build the output
+        header = "|w{:<20}{:<30}{:<40}|n".format("Player", "Location", "Area")
+        separator = "|C" + "-"*90 + "|n"
+        output = [header, separator]
+
+        for session in sessions:
+            player = session.account  # Access the Account/Player object
+            char = session.puppet  # Access the Character object
+            if char and char.location:
+                location_name = char.location.key
+                area_name = char.location.db.area_name if char.location.db.area_name else "Unknown Area"
+                output.append("{:<20}{:<30}{:<40}".format(char.key, location_name, area_name))
+            else:
+                output.append("{:<20}{:<30}{:<40}".format(player.key if player else 'Unknown', "Unknown Location", "Unknown Area"))
+
+        # Send the result back to the caller
+        self.caller.msg("\n".join(output))
