@@ -1,4 +1,3 @@
-# commands/CmdFinger.py
 from evennia import Command as BaseCommand
 
 class CmdFinger(BaseCommand):
@@ -26,18 +25,18 @@ class CmdFinger(BaseCommand):
         # Iterate over all attributes that start with 'finger_'
         finger_data = target.attributes.all()
         output = []
-        output.append("")  # Add an empty line before the content
+        output.append("|C========================================|n")  # Add a separator line
 
         for attr in finger_data:
             attr_name, attr_value = attr.key, attr.value
             if attr_name.startswith("finger_"):
                 field_name = attr_name[7:].replace("_", " ").capitalize()  # Strip 'finger_' and format
-                output.append(f"|w{field_name}|n: |w{attr_value}|n")
+                output.append(f"|g{field_name}|n: |y{attr_value}|n")
 
         if len(output) == 1:  # No attributes were found
             output.append("|rNo public information available.|n")
 
-        output.append("")  # Add an empty line after the content
+        output.append("|C========================================|n")  # Add a separator line
 
         # Send the constructed message to the caller
         self.caller.msg("\n".join(output))
