@@ -1,5 +1,5 @@
+# commands/CmdFinger.py
 from evennia import Command as BaseCommand
-from evennia.utils.utils import make_iter, justify
 
 class CmdFinger(BaseCommand):
     """
@@ -23,26 +23,20 @@ class CmdFinger(BaseCommand):
         if not target:
             return
 
-        # Define the fields you want to display with colors
-        fields = [
-            ("|wFull Name|n", target.attributes.get("finger_fullname", target.key)),
-            ("|cRP Preferences|n", target.attributes.get("finger_rp_preferences", "Not set")),
-            ("|mOnline Times|n", target.attributes.get("finger_online_times", "Not set")),
-            ("|gUsual Hangouts|n", target.attributes.get("finger_usual_hangouts", "Not set")),
-            ("|yRumors|n", target.attributes.get("finger_rumors", "Not set")),
-            ("|rIC Job|n", target.attributes.get("finger_ic_job", "Not set")),
-        ]
-
-        # Construct the message with colors and add empty lines
+        # Iterate over all attributes that start with 'finger_'
+        finger_data = target.attributes.all()
         output = []
         output.append("")  # Add an empty line before the content
-        for field_name, field_value in fields:
-            if field_value != "@@":  # Skip hidden fields
-                output.append(f"{field_name}: |w{field_value}|n")
-        output.append("")  # Add an empty line after the content
 
-        if len(output) == 2:  # Only empty lines were added
-            output.insert(1, "|rNo public information available.|n")
+        for attr_name, attr_value in finger_data.items():
+            if attr_name.startswith("finger_"):
+                field_name = attr_name[7:].replace("_", " ").capitalize()  # Strip 'finger_' and format
+                output.append(f"|w{field_name}|n: |w{attr_value}|n")
+
+        if len(output) == 1:  # No attributes were found
+            output.append("|rNo public information available.|n")
+
+        output.append("")  # Add an empty line after the content
 
         # Send the constructed message to the caller
         self.caller.msg("\n".join(output))

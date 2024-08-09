@@ -1,5 +1,4 @@
 # commands/CmdSetFingerField.py
-
 from evennia import Command as BaseCommand
 
 class CmdSetFingerField(BaseCommand):
@@ -24,6 +23,5 @@ class CmdSetFingerField(BaseCommand):
             return
 
         field_name, value = [part.strip() for part in args.split("=", 1)]
-        # caller.db["finger_" + field_name] = value
         caller.attributes.add("finger_" + field_name, value)
         caller.msg("Set {} to: {}".format(field_name, value))
